@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ISRO Kiosk - Admin Dashboard</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
@@ -375,17 +373,6 @@
     </style>
 </head>
 <body>
-    <nav>
-        <span>ISRO Outreach Admin</span>
-        <a href="/admin/logout">Logout</a>
-    </nav>
-    <div class="container">
-        <h2>Feedback Analytics</h2>
-        <div class="card">
-            <canvas id="feedbackChart" width="400" height="150"></canvas>
-        </div>
-        <button onclick="window.location.href='/download-excel'">Download Full Report (Excel)</button>
-    </div>
     <div class="dashboard-container">
         <div class="header">
             <div class="header-content">
@@ -397,6 +384,7 @@
                 <span>Logout</span>
             </a>
         </div>
+
         <div class="dashboard-stats">
             <div class="stat-card">
                 <div class="stat-title">Total Submissions</div>
@@ -452,15 +440,10 @@
                     <i class="bi bi-funnel"></i>
                     <span>Apply Filters</span>
                 </button>
-                <button onclick="loadPastFeedback()" class="btn btn-secondary">
-                    <i class="bi bi-clock-history"></i>
-                    <span>Past Feedback</span>
+                <button onclick="exportToCSV()" class="btn btn-secondary">
+                    <i class="bi bi-download"></i>
+                    <span>Export to CSV</span>
                 </button>
-
-                <a href="/admin/download_excel" class="btn btn-secondary">
-                    <i class="bi bi-file-earmark-excel"></i>
-                    <span>Download Excel</span>
-                </a>
             </div>
         </div>
 
@@ -505,22 +488,6 @@
     </div>
 
     <script>
-        fetch('/api/stats')
-            .then(res => res.json())
-            .then(data => {
-                const ctx = document.getElementById('feedbackChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(data),
-                        datasets: [{
-                            label: 'Feedback Submissions',
-                            data: Object.values(data),
-                            backgroundColor: '#ff6600'
-                        }]
-                    }
-                });
-            });
         // Format date for display
         function formatDate(dateStr) {
             const date = new Date(dateStr);
@@ -536,14 +503,7 @@
                    '<i class="bi bi-star-fill rating-star"></i>' +
                    '</div>';
         }
-        function loadPastFeedback() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('date-to').value = today;
-            applyFilters();
-        }
 
-
-        
         // Update dashboard stats
         function updateStats(data) {
             let totalStudents = 0;
