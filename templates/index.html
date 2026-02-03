@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="ZF5XQvb0xuNa3X5MTKB0bKuZ_xScJW6mT8IaQsTeqbU" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Official ISRO Outreach Portal for educational missions and virtual tours.">
+    <meta name="keywords" content="ISRO, Space, India, Satellite, Quiz, Chatbot">
+    <title>ISRO KIOSK - Indian Space Research Organisation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>    <!-- Loading Screen -->
+    <div class="loading-screen">        
+        <img src="{{ url_for('static', filename='isro_logo.svg') }}" alt="ISRO Logo" class="isro-loader">
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="title-container fade-in">
+            <h1> Student & Public Outreach Facility </h1>
+            <p class="subtitle">Explore the Universe with Indian Space Research Organisation</p>
+        </div>
+        
+        <div class="kiosk-container fade-in">            
+            <a href="{{ url_for('log_entry') }}" class="module-card">
+                <span class="module-icon">✍🏻</span>
+                <h2 class="module-title">Visitor Registration/Feedback</h2>
+            </a>
+            
+            <a href="{{ url_for('videos') }}" class="module-card">
+                <span class="module-icon">📹</span>
+                <h2 class="module-title">Videos</h2>
+            </a>
+              <a href="{{ url_for('chatbot') }}" class="module-card">
+                <span class="module-icon">🤖</span>
+                <h2 class="module-title">OutReach Bot</h2>
+            </a>
+              <a href="{{ url_for('future_missions') }}" class="module-card">
+                <span class="module-icon">📈</span>
+                <h2 class="module-title">Future Missions of ISRO</h2>
+            </a>
+              <a href="{{ url_for('nrsc') }}" class="module-card">
+                <span class="module-icon">📘</span>
+                <h2 class="module-title">NRSC</h2>
+            </a>
+              <a href="{{ url_for('virtual_tour') }}" class="module-card">
+                <span class="module-icon">🏢</span>
+                <h2 class="module-title">Virtual Tour</h2>
+            </a>
+              <a href="{{ url_for('working_models') }}" class="module-card">
+                <span class="module-icon">🛸</span>
+                <h2 class="module-title">Working Models</h2>
+            </a>
+              <a href="{{ url_for('quiz') }}" class="module-card">
+                <span class="module-icon">❓</span>
+                <h2 class="module-title">Space Quiz</h2>
+            </a>
+
+            <a href="{{ url_for('game') }}" class="module-card">
+                <span class="module-icon">🎮</span>
+                <h2 class="module-title">Moon Lander</h2>
+            </a>
+        </div>
+
+        <div class="admin-nav">
+            {% if 'logged_in' in session %}
+                <div class="admin-controls">
+                    <a href="{{ url_for('admin_dashboard') }}" class="admin-button">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{{ url_for('admin_logout') }}" class="admin-button logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            {% else %}
+                <a href="{{ url_for('admin_login') }}" class="admin-button">
+                    <i class="fas fa-user-lock"></i>
+                    <span>Admin Login</span>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        .admin-nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .admin-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .admin-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 180, 233, 0.9);
+            color: rgb(122, 59, 59);
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-button i {
+            font-size: 1.2em;
+        }
+
+        .admin-button:hover {
+            background: rgba(26, 115, 232, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .admin-button.logout {
+            background: rgba(220, 53, 69, 0.9);
+        }
+
+        .admin-button.logout:hover {
+            background: rgba(220, 53, 69, 1);
+        }
+        /* Card matching your image style */
+.game-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    min-height: 200px;
+}
+
+.game-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.game-card .icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+.game-card h3 {
+    color: #ffffff;
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: 600;
+}
+    </style>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Loading screen animation
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.loading-screen').classList.add('fade-out');
+            }, 1500);
+        });
+    </script>    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <style>
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+        .admin-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .admin-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+    </style>
+</body>
+</html>

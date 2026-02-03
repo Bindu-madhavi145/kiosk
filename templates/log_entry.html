@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Registration - ISRO Kiosk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .form-container {
+            background: rgba(30, 55, 153, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 2rem auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-container label {
+            color: var(--space-white);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        } 
+               .hindi-text {
+            font-size: 1em;
+            color: #ffd700;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--space-white);
+            transition: all 0.3s ease;
+        }
+
+        .form-select {
+            background-color: rgba(13, 18, 36, 0.9);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+        }
+
+        .form-select option {
+            background-color: rgb(13, 18, 36);
+            color: white;
+            padding: 10px;
+        }
+
+        .form-select:focus {
+            background-color: rgba(13, 18, 36, 0.95);
+            border-color: var(--isro-blue);
+            box-shadow: 0 0 10px rgba(30, 55, 153, 0.3);
+            color: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--isro-blue);
+            box-shadow: 0 0 10px rgba(30, 55, 153, 0.3);
+            color: var(--space-white);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .table {
+            color: var(--space-white);
+            background: rgba(30, 55, 153, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table th, .table td {
+            border-color: rgba(255, 255, 255, 0.1);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .btn-submit {
+            background: var(--isro-blue);
+            color: var(--space-white);
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #2744b8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 55, 153, 0.3);
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--space-white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .radio-label {
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .radio-label:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--isro-blue), var(--isro-red));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .video-feedback-container {
+            position: relative;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #videoPreview {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .btn-primary, .btn-danger {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+        }
+
+        .video-feedback-container video {
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        #startRecording, #stopRecording {
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        #startRecording {
+            background: var(--isro-blue);
+            border: none;
+        }
+
+        #stopRecording {
+            background: var(--isro-red);
+            border: none;
+        }
+
+        #startRecording:hover, #stopRecording:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <img src="/static/isro_logo.svg" alt="ISRO Logo" class="isro-loader">
+    </div>
+
+    <div class="main-container">
+        <div class="form-container fade-in">
+            <div class="page-title">
+                <h2>Visitor Registration <span class="hindi-text">(आगंतुक पंजीकरण)</span></h2>
+                <p class="subtitle">Please share your feedback with us <span class="hindi-text">(कृपया हमें अपनी प्रतिक्रिया दें)</span></p>
+            </div>
+            
+            <form method="POST" action="/log_entry" class="fade-in" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Name <span class="hindi-text">(नाम)</span></label>
+                        <input type="text" name="name" class="form-control" required maxlength="100" placeholder="Enter your full name / अपना पूरा नाम दर्ज करें">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Role <span class="hindi-text">(भूमिका)</span></label>
+                        <select name="role" class="form-select" required>
+                            <option value="">Select your role / अपनी भूमिका चुनें</option>
+                            <option value="student">Student / छात्र</option>
+                            <option value="faculty">Faculty / संकाय</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">College/Institution <span class="hindi-text">(कॉलेज/संस्थान)</span></label>
+                        <input type="text" name="college" class="form-control" required maxlength="100" placeholder="Enter your college or institution name / अपने कॉलेज या संस्थान का नाम दर्ज करें">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Mobile Number <span class="hindi-text">(मोबाइल नंबर)</span></label>
+                        <input type="tel" name="mobile_number" class="form-control" pattern="[0-9]{10}" maxlength="10" 
+                               placeholder="10 digit mobile number / 10 अंकों का मोबाइल नंबर" required
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                               onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email Address <span class="hindi-text">(ईमेल पता)</span></label>
+                        <input type="email" name="email" class="form-control" required maxlength="100" 
+                               placeholder="Enter your email address / अपना ईमेल पता दर्ज करें">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Total Number of Students <span class="hindi-text">(छात्रों की कुल संख्या)</span></label>
+                        <input type="number" name="total_students" class="form-control" min="0" max="999" required 
+                               placeholder="Enter total students / कुल छात्रों की संख्या दर्ज करें">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Total Number of Faculties <span class="hindi-text">(संकाय की कुल संख्या)</span></label>
+                        <input type="number" name="total_faculties" class="form-control" min="0" max="999" required 
+                               placeholder="Enter total faculties / कुल संकाय की संख्या दर्ज करें">
+                    </div>
+                </div>
+
+                <div class="feedback-section mt-5">
+                    <h3 class="text-center mb-4">Feedback Ratings <span class="hindi-text">(प्रतिक्रिया रेटिंग)</span></h3>
+                    <p class="text-center text-white-50 mb-4">Please rate your experience / कृपया अपने अनुभव को रेट करें (1: Poor/खराब – 5: Outstanding/उत्कृष्ट)</p>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Activity / गतिविधि</th>
+                                    <th>1<br><small>Poor / खराब</small></th>
+                                    <th>2<br><small>Satisfactory / संतोषजनक</small></th>
+                                    <th>3<br><small>Good / अच्छा</small></th>
+                                    <th>4<br><small>Very Good / बहुत अच्छा</small></th>
+                                    <th>5<br><small>Outstanding / उत्कृष्ट</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activity, hindi in [
+                                    ('Lecture & Interaction', 'व्याख्यान और बातचीत'),
+                                    ('Display & Explanation', 'प्रदर्शन और व्याख्या'),
+                                    ('Exhibition of Models', 'मॉडल का प्रदर्शन'),
+                                    ('Video Show', 'वीडियो शो'),
+                                    ('Selfie Corner', 'सेल्फी कॉर्नर'),
+                                    ('Overall Arrangements', 'समग्र व्यवस्था')
+                                ] %}
+                                <tr>
+                                    <td>{{ activity }}<br><small class="hindi-text">{{ hindi }}</small></td>
+                                    {% for i in range(1, 6) %}
+                                    <td>
+                                        <div class="radio-label">
+                                            <input type="radio" name="{{ activity.replace(' ', '_') }}" value="{{ i }}" required>
+                                        </div>
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mb-4 mt-4">
+                        <label class="form-label">Additional Comments <span class="hindi-text">(अतिरिक्त टिप्पणियां)</span></label>
+                        <textarea name="feedback" class="form-control" rows="4" required maxlength="500" 
+                                  placeholder="Please share your suggestions and feedback / कृपया अपने सुझाव और प्रतिक्रिया साझा करें..."></textarea>
+                    </div>                    <div class="mb-4">
+                        <label class="form-label">Video Feedback <span class="hindi-text">(वीडियो प्रतिक्रिया)</span></label>
+                        <div class="video-feedback-container">
+                            <div class="video-preview-wrapper">
+                                <!-- Live preview while recording -->
+                                <video id="livePreview" style="display: none; width: 100%; max-width: 400px; margin-bottom: 10px;" autoplay muted></video>
+                                <!-- Recorded video preview -->
+                                <video id="recordedVideo" style="display: none; width: 100%; max-width: 400px; margin-bottom: 10px;" controls></video>
+                                <div id="recordingIndicator" style="display: none;">
+                                    <span class="recording-dot"></span> Recording in progress...
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2 mb-2">
+                                <button type="button" id="startRecord" class="btn btn-primary">Start Recording</button>
+                                <button type="button" id="stopRecord" class="btn btn-danger" style="display: none;">Stop Recording</button>
+                                <button type="button" id="retakeVideo" class="btn btn-secondary" style="display: none;">Record Again</button>
+                            </div>
+                            <input type="hidden" name="hasVideoFeedback" id="hasVideoFeedback" value="false">
+                            <div id="videoPreview" style="display: none; margin-top: 10px;">
+                                <p class="text-success">Video recorded successfully! You can watch the preview above, record again, or submit the form.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3 mt-5">
+                        <button type="submit" class="btn btn-submit">Submit Feedback / प्रतिक्रिया जमा करें</button>
+                        <a href="/" class="btn btn-back">Back to Home / वापस मुख्य पृष्ठ पर</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/script.js"></script>
+    <script src="/static/video_feedback.js"></script>
+</body>
+</html>

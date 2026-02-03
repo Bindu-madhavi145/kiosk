@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="videos-container">
+    <nav class="top-nav">
+            <a href="/" class="home-btn">
+                <i class="bi bi-arrow-left"></i> Back to Home
+            </a>
+        </nav>
+    
+    <h1 class="page-title">ISRO Video Gallery</h1>
+    <div class="video-grid">
+        {% for key, video in videos.items() %}
+        <div class="video-card" data-video="{{ video.video_url }}">
+            <div class="thumbnail">
+                <img src="{{ video.thumbnail }}" alt="{{ video.title }}">
+                <div class="play-overlay">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <h3>{{ video.title }}</h3>
+            <p>{{ video.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+      <!-- Video Modal -->    
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-nav">
+                <button class="modal-back-btn" id="modalBackBtn">
+                    <i class="bi bi-arrow-left"></i> Back to Videos
+                </button>
+            </div>
+            <span class="close">&times;</span>
+            <div class="video-container">
+                <video id="videoPlayer" controls>
+                    <source src="" type="video/mp4">
+                </video>
+                <div class="loading-spinner"></div>
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Failed to load video. Please try again.</p>
+                    <button class="retry-btn">Retry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='videos.css') }}">
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='videos.js') }}"></script>
+{% endblock %}

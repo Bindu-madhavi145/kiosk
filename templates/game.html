@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        /* Glassmorphism Container for the Game HUD */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+        url("/static/images/space_bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+.stats {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(15, 15, 15, 0.85); /* Semi-transparent */
+    backdrop-filter: blur(12px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Glass edge */
+    border-radius: 15px;
+    padding: 20px;
+    color: #ffffff;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+.tour-nav button:hover {
+      background: #1a237e;
+      color: #fff;
+    }
+/* Value highlighting using ISRO Electric Blue */
+.stats b {
+    color: #0E88D3; 
+    text-shadow: 0 0 10px rgba(14, 136, 211, 0.5);
+}
+
+/* Glassmorphism Game Over Screen */
+#game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    background: rgba(10, 25, 47, 0.85); /* Deep space blue glass */
+    backdrop-filter: blur(20px);
+    border: 2px solid #F47216; /* ISRO Orange accent */
+    border-radius: 25px;
+    padding: 40px;
+    text-align: center;
+    display: none; /* Hidden by default */
+    z-index: 100;
+}
+
+/* Stylized ISRO Button */
+.btn-game {
+    background: #F47216;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.btn-game:hover {
+    box-shadow: 0 0 20px rgba(244, 114, 22, 0.6);
+    transform: scale(1.05);
+}
+.game-container { 
+    position: relative; 
+    width: 800px; 
+    margin: auto; 
+}
+
+#game-canvas {
+    background: transparent;
+    display: block;
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.9);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+    </style>
+</head>
+<body>
+    <nav style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 40px;
+    background:rgba(246, 144, 3, 0.6);
+    backdrop-filter: blur(10px);">
+        <div style="color:white;font-size:18px;font-weight:bold;">🚀 ISRO Game Center</div>
+        <button class="btn-game" onclick="window.location.href='/'">⬅ Back to Home</button>
+    </nav>
+    
+    <div class="container">
+        <h2 style="text-align: center;">Mission: Chandrayaan Soft Landing</h2>
+        <div class="game-container">
+            <div class="stats" id="stats">
+                Fuel: 100% <br>
+                Velocity: 0.0 m/s <br>
+                Altitude: 500m
+            </div>
+            <canvas id="game-canvas" width="800" height="500"></canvas>
+            <div id="game-over">
+                <h1 id="status-text"></h1>
+                <button onclick="location.reload()" class="btn-game">Try Again</button>
+            </div>
+
+            
+        </div>
+        <p style="text-align:center; margin-top:10px;"><b>Instructions:</b> Press <b>SPACEBAR</b> to fire thrusters. Land gently!</p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const stats = document.getElementById('stats');
+        const gameOverDiv = document.getElementById('game-over');
+        const statusText = document.getElementById('status-text');
+
+        // Game Constants
+        let gravity = 0.05;
+        let thrust = 0.15;
+        let lander = { x: 375, y: 50, w: 50, h: 50, vy: 0, fuel: 100, isThrusting: false };
+        let moonSurface = 450;
+        let gameActive = true;
+
+        // Controls
+        window.addEventListener('keydown', (e) => { if(e.code === 'Space') lander.isThrusting = true; });
+        window.addEventListener('keyup', (e) => { if(e.code === 'Space') lander.isThrusting = false; });
+
+        function update() {
+            if(!gameActive) return;
+
+            // Physics
+            lander.vy += gravity;
+            if(lander.isThrusting && lander.fuel > 0) {
+                lander.vy -= thrust;
+                lander.fuel -= 0.5;
+            }
+            lander.y += lander.vy;
+
+            // Update Stats
+            stats.innerHTML = `Fuel: ${Math.max(0, Math.floor(lander.fuel))}% <br>
+                               Velocity: ${lander.vy.toFixed(2)} m/s <br>
+                               Altitude: ${Math.max(0, Math.floor(moonSurface - lander.y - lander.h))}m`;
+
+            // Collision Check
+            if(lander.y + lander.h >= moonSurface) {
+                gameActive = false;
+                if (Math.abs(lander.vy) < 2.0) {
+                    statusText.innerText = "SUCCESS! Soft Landing Achieved 🇮🇳";
+                    statusText.style.color = "lime";
+                } else {
+                    statusText.innerText = "CRASHED! Velocity too high.";
+                    statusText.style.color = "red";
+                }
+                gameOverDiv.style.display = 'block';
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Stars
+            ctx.fillStyle = "white";
+            stars.forEach(s => ctx.fillRect(s.x, s.y, s.r, s.r));
+
+
+            // Draw Moon
+            ctx.fillStyle = "#777";
+            ctx.fillRect(0, moonSurface, canvas.width, 50);
+
+            // Draw Lander (Orange box for ISRO)
+            ctx.fillStyle = "orange";
+            ctx.fillRect(lander.x, lander.y, lander.w, lander.h);
+            
+            // Draw Thrust Flame
+            if(lander.isThrusting && lander.fuel > 0) {
+                ctx.fillStyle = "yellow";
+                ctx.beginPath();
+                ctx.moveTo(lander.x + 10, lander.y + lander.h);
+                ctx.lineTo(lander.x + 25, lander.y + lander.h + 20);
+                ctx.lineTo(lander.x + 40, lander.y + lander.h);
+                ctx.fill();
+            }
+        }
+        const stars = Array.from({ length: 60 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 2
+            }));
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>

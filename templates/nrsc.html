@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='nrsc.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="nrsc-container">
+    <!-- Back Button -->
+    <a href="{{ url_for('home') }}" class="back-button">
+        <span class="back-arrow">←</span> Back to Home
+    </a>
+
+    <!-- Header Section -->
+    <div class="nrsc-header">
+        <div class="header-content">
+            <h1>National Remote Sensing Centre (NRSC)</h1>
+            <p class="nrsc-intro">
+                The National Remote Sensing Centre (NRSC) is a key centre of ISRO that provides remote sensing data services 
+                and solutions for various national development needs. It plays a crucial role in Earth observation applications 
+                and disaster management support.
+            </p>
+        </div>
+        <div class="header-background"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nrsc-nav">
+        <div class="nav-scroll">
+            {% for key, section in sections.items() %}
+            <a href="#{{ key }}" class="nav-item">{{ section.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="nrsc-content">
+        {% for key, section in sections.items() %}
+        <div class="nrsc-section" id="{{ key }}">
+            <div class="section-header">
+                <h2>{{ section.title }}</h2>
+            </div>
+            <div class="section-content">
+                <div class="text-side">
+                    <div class="overview-box">
+                        <h3>Overview</h3>
+                        <p>{{ section.overview }}</p>
+                    </div>
+                    <div class="details-box">
+                        <h3>Details</h3>
+                        <div class="details-content">
+                            {% for paragraph in section.description.split('\n\n') %}
+                                <p>{{ paragraph }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="image-side">
+                    <div class="image-wrapper">
+                        <img src="{{ section.image }}" alt="{{ section.title }} Applications">
+                    </div>
+                    {% if key == 'agriculture' %}
+                    <div class="extra-image">
+                        <img src="/static/images/nrsc/applications_diagram.jpg" alt="Remote Sensing Applications">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='nrsc.js') }}"></script>
+{% endblock %}

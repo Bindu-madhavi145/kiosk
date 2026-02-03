@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="quiz-container">
+    <div class="quiz-header">
+        <a href="{{ url_for('home') }}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        <h1 class="page-title">Space Explorer Quiz</h1>
+        <div class="score-board">
+            Score: <span id="score">0</span>
+        </div>
+    </div>
+    
+    <div class="quiz-box">
+        <div class="timer-container">
+            <div class="timer-bar">
+                <div id="timer-progress"></div>
+            </div>
+            <span id="timer-text">20</span>
+        </div>
+        
+        <div id="question-container">
+            <h2 id="question"></h2>
+            <div id="options" class="options-grid"></div>
+        </div>
+        
+        <div id="result-container" class="hidden">
+            <div class="result-content">
+                <p id="explanation"></p>
+            </div>
+        </div>
+        
+        <button id="next-btn" class="hidden">Next Question <i class="fas fa-arrow-right"></i></button>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='quiz.css') }}">
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentScore = 0;
+let isAnswered = false;
+let timerInterval;
+const QUESTION_TIME = 20; // seconds per question
+
+function startTimer() {
+    let timeLeft = QUESTION_TIME;
+    const timerBar = document.querySelector('.timer-bar');
+    const timerText = document.getElementById('timer-text');
+    const timerContainer = document.querySelector('.timer-container');
+    
+    // Reset timer state
+    timerBar.style.width = '100%';
+    timerContainer.classList.remove('timer-warning', 'timer-danger');
+    timerText.textContent = timeLeft;
+    
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        const percentage = (timeLeft / QUESTION_TIME) * 100;
+        timerBar.style.width = percentage + '%';
+        timerText.textContent = timeLeft;
+        
+        // Add warning classes
+        if (timeLeft <= 10) {
+            timerContainer.classList.add('timer-warning');
+        }
+        if (timeLeft <= 5) {
+            timerContainer.classList.remove('timer-warning');
+            timerContainer.classList.add('timer-danger');
+        }
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            if (!isAnswered) {
+                handleTimeUp();
+            }
+        }
+    }, 1000);
+}
+
+function handleTimeUp() {
+    isAnswered = true;
+    const buttons = document.querySelectorAll('.option-btn');
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.dataset.correct === 'true') {
+            btn.classList.add('correct');
+        }
+    });
+    document.getElementById('result-container').classList.remove('hidden');
+    document.getElementById('next-btn').classList.remove('hidden');
+    document.getElementById('explanation').textContent = 'Time\'s up! The correct answer is highlighted in green.';
+}
+
+function loadQuestion() {
+    fetch('/get_quiz_question', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayQuestion(data);
+    });
+}
+
+function displayQuestion(data) {
+    document.getElementById('question').textContent = data.question;
+    const optionsDiv = document.getElementById('options');
+    optionsDiv.innerHTML = '';
+    isAnswered = false;
+    startTimer(); // Start the timer for the new question
+    
+    data.options.forEach(option => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.textContent = option;
+        button.onclick = () => checkAnswer(option, data.correct, data.explanation);
+        optionsDiv.appendChild(button);
+    });
+    
+    document.getElementById('result-container').classList.add('hidden');
+    document.getElementById('next-btn').classList.add('hidden');
+}
+
+function checkAnswer(selected, correct, explanation) {
+    if (isAnswered) return;
+    isAnswered = true;
+    
+    const buttons = document.querySelectorAll('.option-btn');
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        if(btn.textContent === correct) {
+            btn.classList.add('correct');
+        }
+        if(btn.textContent === selected && selected !== correct) {
+            btn.classList.add('wrong');
+        }
+    });
+    
+    if(selected === correct) {
+        currentScore += 10;
+        document.getElementById('score').textContent = currentScore;
+    }
+    
+    document.getElementById('explanation').textContent = explanation;
+    document.getElementById('result-container').classList.remove('hidden');
+    document.getElementById('next-btn').classList.remove('hidden');
+}
+
+document.getElementById('next-btn').onclick = () => {
+    loadQuestion();
+};
+
+// Load first question on page load
+loadQuestion();
+</script>
+{% endblock %}

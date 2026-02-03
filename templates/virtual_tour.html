@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NRSC Virtual Tour</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='virtual_tour.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+      margin: 0;
+      padding: 0;
+    }
+    .main-heading {
+      text-align: center;
+      font-size: 2.5rem;
+      margin: 30px 0 10px 0;
+      letter-spacing: 2px;
+      color: #ebe6e2; /* Changed to white */
+      text-shadow: 0 2px 8px #222, 0 0 4px #b3c6ff;
+    }
+    .back-btn {
+      display: inline-block;
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      background: #fff;
+      border: 2px solid #1a237e;
+      color: #1a237e;
+      padding: 10px 22px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px #b3c6ff;
+      transition: background 0.2s, color 0.2s;
+      z-index: 100;
+    }
+    .back-btn:hover {
+      background: #1a237e;
+      color: #928e8c;
+    }
+    .tour-nav {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin: 18px 0 30px 0;
+      flex-wrap: wrap;
+    }
+    .tour-nav button {
+      background: #e3e7fd;
+      border: 1px solid #1a237e;
+      color: #1a237e;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tour-nav button:hover {
+      background: #1a237e;
+      color: #fff;
+    }
+    .section {
+      margin: 40px auto;
+      max-width: 700px;
+      background: #f0753c;
+      border-radius: 18px;
+      box-shadow: 0 2px 16px #b3c6ff44;
+      padding: 32px 24px;
+      text-align: center;
+      transition: box-shadow 0.2s;
+    }
+    .section:hover {
+      box-shadow: 0 4px 32px #1a237e33;
+    }
+    .section img, .section video {
+      max-width: 90%;
+      border-radius: 12px;
+      margin: 18px 0;
+      box-shadow: 0 2px 12px #b3c6ff55;
+    }
+    .section button {
+      margin-top: 18px;
+      background: #1a237e;
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .section button:hover {
+      background: #3949ab;
+    }
+    .section h1 {
+      color: #fff; /* Make section titles white */
+      text-shadow: 0 2px 8px #222, 0 0 4px #b3c6ff;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="{{ url_for('home') }}" class="back-btn">&#8592; Back to Home</a>
+  <h1 class="main-heading">Virtual Tour</h1>
+
+  <nav class="tour-nav">
+    <button onclick="scrollToSection('building')">NRSC Building</button>
+    <button onclick="scrollToSection('holograph')">Holographic Display</button>
+    <button onclick="scrollToSection('video')">Holographic Video</button>
+    <button onclick="scrollToSection('sphere')">IMGEOS</button>
+    <button onclick="scrollToSection('chandrayaan')">Chandrayaan-3</button>
+    <button onclick="scrollToSection('exhibition')">Exhibition Hall</button>
+    <button onclick="scrollToSection('selfie corner')">Selfie Corner</button>
+  </nav>
+
+  <section class="section" id="building">
+    <h1>NRSC Building</h1>
+    <img src="{{ url_for('static', filename='images/images/building.jpg') }}" alt="NRSC Building">
+    <button onclick="scrollToSection('holograph')">Scroll Down</button>
+  </section>
+
+  <section class="section" id="holograph">
+    <h1>Holographic Display</h1>
+    <h1>solar system</h1>
+    <video src="{{ url_for('static', filename='images/images/holographic.mp4') }}" autoplay loop muted></video>
+    <button onclick="scrollToSection('video')">Scroll Down</button>
+  </section>
+
+  <section class="section" id="video">
+    <h1>Holographic</h1>
+    <video src="{{ url_for('static', filename='images/images/holo_video.mp4') }}" autoplay loop muted></video>
+    <button onclick="scrollToSection('sphere')">Scroll Down</button>
+  </section>
+
+  <section class="section" id="sphere">
+    <h1>IMGEOS</h1>
+    <img src="{{ url_for('static', filename='images/images/imgeos.jpg') }}" alt="IMGEOS">
+    <button onclick="scrollToSection('chandrayaan')">Scroll Down</button>
+  </section>
+
+  <section class="section" id="chandrayaan">
+    <h1>Chandrayaan-3</h1>
+    <video src="{{ url_for('static', filename='images/images/chandrayaan3.mp4') }}" autoplay loop muted></video>
+    <button onclick="scrollToSection('exhibition')">Scroll Down</button>
+  </section>
+
+  <section class="section" id="exhibition">
+    <h1>Exhibition Hall</h1>
+    <img src="{{ url_for('static', filename='images/images/exhibition.jpg') }}" alt="Exhibition Hall">
+    <button onclick="scrollToSection('selfie corner')">Scroll Down</button>
+  </section>
+
+  <section class="section" id="selfie corner">
+    <h1>Selfie Corner</h1>
+    <img src="{{ url_for('static', filename='images/images/selfie.jpg') }}" alt="Selfie Corner">
+    <p>Explore the innovations and discoveries showcased at NRSC.</p>
+  </section>
+
+  <script>
+    // Smooth scroll to section
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  </script>
+  <script src="{{ url_for('static', filename='virtual tour.js') }}"></script>
+</body>
+</html>

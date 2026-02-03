@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="start-container">
+    <div class="start-card">
+        <h1>🚀 Space Explorer Quiz</h1>
+        <p>Enter your name to begin the challenge</p>
+
+        <input type="text" id="username" placeholder="Your Name">
+        <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+</div>
+
+<script>
+function startQuiz() {
+    const name = document.getElementById("username").value.trim();
+    if (!name) {
+        alert("Please enter your name");
+        return;
+    }
+
+    fetch("/start_quiz", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        credentials: "same-origin",
+        body: JSON.stringify({name: name})
+    }).then(() => {
+        window.location.href = "/quiz/play";
+    });
+}
+</script>
+
+{% endblock %}

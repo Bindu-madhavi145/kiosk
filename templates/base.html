@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISRO Kiosk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block styles %}{% endblock %}
+</head>
+<body>    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="{{ url_for('home') }}">
+                <span>ISRO Space Experience</span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('future_missions') }}" class="nav-item">Future Missions</a>
+            <a href="{{ url_for('videos') }}" class="nav-item">Videos</a>
+            <a href="{{ url_for('quiz') }}" class="nav-item">Quiz</a>
+            <a href="{{ url_for('chatbot') }}" class="nav-item">OutreachBot</a>
+            <a href="{{ url_for('nrsc') }}" class="nav-item">NRSC</a>            
+            <a href="{{ url_for('working_models') }}" class="nav-item">Working Models</a>
+            <a href="{{ url_for('virtual_tour') }}" class="nav-item">Virtual Tour</a>
+            <a href="{{ url_for('game') }}" class="nav-item">Game</a>
+        </div>
+    </nav>
+
+    <main class="content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 ISRO Kiosk. All rights reserved.</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <a href="{{ url_for('home') }}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+    <h1 class="page-title">ISRO Working Models</h1>
+</div>
+
+<div class="model-container">
+    {% for model_id, model in models.items() %}
+    <div class="model-card" data-video="{{ model.video }}">
+        <div class="video-container">
+            <video class="model-video" poster="{{ model.thumbnail }}" preload="metadata">
+                <source src="{{ model.video }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="play-button">
+                <i class="fas fa-play"></i>
+            </div>
+        </div>
+        <div class="model-info">
+            <h2 class="model-title">{{ model.title }}</h2>
+            <p class="model-description">{{ model.description }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Video Modal -->
+<div class="video-modal">
+    <div class="modal-content">
+        <button class="close-modal">
+            <i class="fas fa-times"></i>
+        </button>
+        <video class="modal-video" controls>
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='working_models.css') }}">
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='working_models.js') }}"></script>
+{% endblock %}

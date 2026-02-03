@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='future_missions.css') }}">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="missions-hero">
+    <a href="{{ url_for('home') }}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    <h1 class="hero-title" data-aos="fade-down">Future ISRO Missions</h1>
+    <p class="hero-subtitle" data-aos="fade-up">Exploring New Frontiers in Space Technology</p>
+</div>
+
+<div class="missions-container">
+    {% for mission_id, mission in missions.items() %}
+    <section class="mission-section" data-aos="fade-up">
+        <div class="mission-content">
+            <div class="mission-text">
+                <h2 class="mission-title">{{ mission.title }}</h2>
+                <div class="mission-launch">Expected Launch: {{ mission.launch }}</div>
+                <p class="mission-description">{{ mission.description }}</p>
+                <div class="mission-features">
+                    <h3>Key Features:</h3>
+                    <ul>
+                        {% for feature in mission.key_features %}
+                        <li>{{ feature }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="mission-image-container" data-aos="fade-left">
+                <img src="{{ mission.image }}" alt="{{ mission.title }}" class="mission-image">
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+
+<div class="timeline-section">
+    <h2 class="timeline-title" data-aos="fade-up">Mission Timeline</h2>
+    <div class="timeline">
+        {% for mission_id, mission in missions.items() %}
+        <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+                <div class="timeline-date">{{ mission.launch }}</div>
+                <h3>{{ mission.title }}</h3>
+                <p>{{ mission.description }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    });
+</script>
+{% endblock %}

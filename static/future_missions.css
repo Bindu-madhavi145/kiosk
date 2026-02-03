@@ -1,0 +1,256 @@
+/* Future Missions Page Styling */
+:root {
+    --primary-color: #1a237e;
+    --secondary-color: #0d47a1;
+    --accent-color: #00b0ff;
+    --text-color: #ffffff;
+    --bg-gradient: linear-gradient(135deg, #0c0c2c 0%, #1a237e 100%);
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* Hero Section */
+.missions-hero {
+    min-height: 60vh;
+    background: var(--bg-gradient);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-title {
+    font-size: 4rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0, 176, 255, 0.5);
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+/* Missions Container */
+.missions-container {
+    background: #0c0c2c;
+    color: var(--text-color);
+    padding: 4rem 2rem;
+}
+
+/* Mission Section */
+.mission-section {
+    max-width: 1200px;
+    margin: 0 auto 6rem;
+    padding: 2rem;
+    background: var(--card-bg);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.mission-content {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.mission-text {
+    padding-right: 2rem;
+}
+
+.mission-title {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.mission-launch {
+    font-size: 1.2rem;
+    color: #64b5f6;
+    margin-bottom: 1.5rem;
+}
+
+.mission-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.mission-features {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
+.mission-features h3 {
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.mission-features ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mission-features li {
+    margin-bottom: 0.8rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.mission-features li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent-color);
+}
+
+.mission-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.mission-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.mission-image:hover {
+    transform: scale(1.05);
+}
+
+/* Timeline Section */
+.timeline-section {
+    background: var(--bg-gradient);
+    padding: 6rem 2rem;
+}
+
+.timeline-title {
+    text-align: center;
+    color: var(--accent-color);
+    font-size: 3rem;
+    margin-bottom: 4rem;
+}
+
+.timeline {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    height: 100%;
+    width: 2px;
+    background: var(--accent-color);
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.timeline-item:nth-child(odd) {
+    padding-right: 50%;
+}
+
+.timeline-item:nth-child(even) {
+    padding-left: 50%;
+}
+
+.timeline-content {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 10px;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.timeline-date {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Back Button */
+.back-btn {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    z-index: 10;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-2px);
+    color: var(--text-color);
+}
+
+.back-btn i {
+    font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+    .mission-content {
+        grid-template-columns: 1fr;
+    }
+
+    .mission-text {
+        padding-right: 0;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .timeline::before {
+        left: 0;
+    }
+
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) {
+        padding: 0 0 0 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .mission-section {
+        padding: 1rem;
+    }
+
+    .mission-title {
+        font-size: 2rem;
+    }
+}
